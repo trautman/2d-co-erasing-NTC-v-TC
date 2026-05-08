@@ -1,0 +1,114 @@
+experiment_name: co_erasing_snapshot_v2
+output_dir: outputs
+
+parallel:
+  max_workers: 12
+
+ot:
+  response_temperature: 0.06
+  joint_kl_temperature: 0.06
+  marginal_kl_lambda_h: 0.06
+  marginal_kl_lambda_r: 0.06
+  marginal_kl_solver: slsqp
+  # SINKHORN PARMETERS
+  # marginal_kl_solver: sinkhorn_unbalanced
+  # marginal_kl_entropy_epsilon: 0.003
+  # sinkhorn_max_iter: 500
+  # sinkhorn_tol: 1e-8
+
+board:
+  grid_n: 120
+
+trajectory:
+  n_samples_per_agent: 40
+  n_points: 80
+  footprint_radius_px: 5
+
+marginals:
+  generator: simulator_task_weighted_omni_di
+  beta_h: 10.0
+  beta_r: 10.0
+  utility_terms:
+  - clean_dirt
+  simulator_task_weighted_omni_di:
+    horizon: 0.95
+    initial_speed: 0.3
+    vmax: 0.48
+    amax: 1.15
+    accel_lengthscale: 0.25
+    accel_sigma: 1.15
+    accel_nugget: 1.0e-06
+    random_seed: 7
+
+states:
+  board_masks:
+  - central_patch
+  - two_unequal_patches
+  - three_patch_competition
+  - bottleneck
+  - sparse_cleanup
+  - asymmetric_reachability
+
+costs_to_run:
+- c_combined
+# - c_nominal
+
+
+metrics_to_run:
+- m_board_erased
+- m_redundant_work
+- m_conflict
+- m_path_length
+- m_wiping_clean_board
+
+mmodels:
+  models_to_compute:
+  - ind
+  - resp_sample
+  - resp_marg
+  - joint_kl
+
+  baselines:
+  - ind
+  - resp_sample
+  - resp_marg
+
+  ntc_model: joint_kl
+
+# FULL NTC KL MARGINALS RUN, COMPARE WITH JOINT_KL
+# models:
+#   models_to_compute:
+#   - ind
+#   - resp_sample
+#   - resp_marg
+#   - joint_kl
+#   - ntc_marginal_kl
+
+#   baselines:
+#   - ind
+#   - resp_sample
+#   - resp_marg
+#   - joint_kl
+
+#   ntc_model: ntc_marginal_kl
+
+
+
+
+io:
+  save_results: true
+  load_existing_results: false
+
+plotting:
+  top_k_marginal_samples: 15
+  top_k_pairs: 15
+  make_metric_key_page: true
+  make_configuration_page: true
+  make_expected_metric_pages: true
+  make_metric_pages: true
+  make_top_k_pair_pages: true
+  make_summarized_cb_pages: true
+
+progress:
+  worker_logs: false
+  print_solver: true
