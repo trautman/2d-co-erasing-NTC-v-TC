@@ -61,7 +61,7 @@ metrics_to_run:
 - m_path_length
 - m_wiping_clean_board
 
-mmodels:
+models:
   models_to_compute:
   - ind
   - resp_sample
