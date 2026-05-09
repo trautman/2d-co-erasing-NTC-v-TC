@@ -20,9 +20,14 @@ board:
   grid_n: 120
 
 trajectory:
-  n_samples_per_agent: 40
+  n_samples_per_agent: 500
   n_points: 80
   footprint_radius_px: 5
+# trajectory:
+#   n_raw_samples_per_agent: 500
+#   n_samples_per_agent: 50
+#   n_points: 80
+#   footprint_radius_px: 5
 
 marginals:
   generator: simulator_task_weighted_omni_di
@@ -61,6 +66,7 @@ metrics_to_run:
 - m_path_length
 - m_wiping_clean_board
 
+# JUST RUN NTC KL JOINT
 models:
   models_to_compute:
   - ind
